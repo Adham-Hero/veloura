@@ -115,6 +115,49 @@ The API runs at `http://localhost:5000`. Verify it's alive:
 curl http://localhost:5000/api/health
 ```
 
+## 3b. Deploying the Backend to Vercel (alternative to Render)
+
+Vercel runs Node apps as **serverless functions**, not an always-on server, so the backend
+includes a small adapter for this:
+
+- `app.js` — builds the Express app (routes, middleware) but does not call `app.listen()`
+- `server.js` — used for local dev / Render: imports `app.js` and calls `app.listen()`
+- `api/index.js` — used by Vercel: imports `app.js` and exports it directly, no `listen()`
+- `vercel.json` — tells Vercel to route every request to `api/index.js`
+- `config/db.js` — caches the MongoDB connection so it's reused across function invocations instead of reconnecting on every request
+
+To deploy:
+
+1. Push the repo to GitHub (see step 2 above) if you haven't already.
+2. Go to **vercel.com → Add New → Project** and import the repo.
+3. Set **Root Directory** to `backend`.
+4. Framework Preset: choose **Other** (Vercel will use `vercel.json` automatically).
+5. Add Environment Variables (Project Settings → Environment Variables):
+   ```
+   MONGO_URI = mongodb+srv://... (your Atlas connection string)
+   JWT_SECRET = a long random string
+   FRONTEND_URL = https://veloura.vercel.app  (your frontend's deployed URL)
+   ```
+6. Deploy. Your API will be live at something like:
+   ```
+   https://veloura-backend.vercel.app
+   ```
+7. Test it: `https://veloura-backend.vercel.app/api/health`
+8. Point the frontend's `VITE_API_URL` env variable at `https://veloura-backend.vercel.app/api`.
+
+**Creating the first admin account on Vercel:** Vercel has no persistent shell like Render does, so run the seed script from your own machine, pointed at the Atlas database:
+
+```bash
+cd backend
+# make sure .env has the SAME MONGO_URI as the one set in Vercel
+npm run seed:admin
+node utils/seedProducts.js   # optional sample products
+```
+
+Since both point at the same Atlas cluster, this populates the database your live Vercel API reads from.
+
+**Note:** Vercel's free tier has a serverless function execution limit (10s on Hobby) and functions "cold start" after inactivity, similar to Render's free tier sleep behavior — fine for demos and small projects, not for high-traffic production use.
+
 ## 4. Frontend Setup
 
 Open a **second terminal**:
