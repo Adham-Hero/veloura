@@ -77,7 +77,7 @@ const Footer = () => {
           </div>
           <div className="col-6 col-md-4">
             <h6>{t("footer.contactUs")}</h6>
-            <a href="mailto:eltonyahmed232@gmail.com">eltonyahmed232@gmail.com</a>
+            <a href="mailto:velouraco6@gmail.com">velouraco6@gmail.com</a>
             <a href="https://wa.me/201554372442" target="_blank" rel="noopener noreferrer">
               01554372442
             </a>
