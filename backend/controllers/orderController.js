@@ -46,9 +46,25 @@ const createOrder = async (req, res, next) => {
 
       totalPrice += product.price * item.quantity;
 
-      // decrement stock
-      product.stock -= item.quantity;
-      await product.save();
+      // Decrement stock atomically with $inc instead of mutating the document
+      // and calling .save(). Using .save() re-validates EVERY field on the
+      // document (including "category"), so a product saved under a category
+      // that has since been removed from the schema's enum (e.g. an old
+      // "Hair Serums" product after that category was deleted) would fail
+      // checkout entirely with a ValidatorError - even though nothing about
+      // checkout actually needs to touch or validate the category field.
+      // $inc only ever touches the stock field, so unrelated legacy/invalid
+      // data on the document can never block an order. The stock >= quantity
+      // guard also makes this atomic and race-condition-safe under concurrent
+      // orders, which the old read-then-save pattern was not.
+      const updated = await Product.findOneAndUpdate(
+        { _id: product._id, stock: { $gte: item.quantity } },
+        { $inc: { stock: -item.quantity } },
+        { new: true }
+      );
+      if (!updated) {
+        return res.status(400).json({ message: `Insufficient stock for ${product.name}` });
+      }
     }
 
     const order = await Order.create({
