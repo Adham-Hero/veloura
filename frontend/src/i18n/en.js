@@ -13,7 +13,7 @@ export default {
     myAccount: "My Account",
   },
   home: {
-    heroTitle: "Your Hair, Your Signature.",
+    heroTitle: "Because Your Hair Deserves The Best.",
     heroSubtitle:
       "Discover premium hair care crafted to bring out the natural beauty and strength of every strand.",
     shopNow: "Shop Now",
