@@ -275,24 +275,55 @@ All three are optional and independent — if you don't configure a channel, it'
 
 `EMAIL_USER` is the Gmail account that *sends* the emails (can be any Gmail you control) — it's used both to email the buyer their invoice and to email you the order alert. `ADMIN_NOTIFICATION_EMAIL` is where the "new order" alert is *received* — set it to `eltonyahmed232@gmail.com`.
 
-### 10.2 WhatsApp setup (CallMeBot — free, no business account)
+### 10.2 WhatsApp setup (Meta WhatsApp Cloud API — official, never disconnects)
 
-1. Go to **callmebot.com/blog/free-api-whatsapp-messages** and find the current bot's phone number (it's shown at the top of the "Setup" section — this number rotates occasionally when the free bot fills up, so always use the number listed on that page, not an old one from elsewhere).
-2. Save that number as a contact on the admin's phone (`01554372442`).
-3. Send it this exact WhatsApp message: `I allow callmebot to send me messages`
-4. Within a minute you'll receive a reply: *"API Activated for your phone number. Your APIKEY is ..."* — that number is your API key. (If nothing arrives within 2 minutes, wait 24h and try again — the free bot rate-limits new signups.)
-5. In `backend/.env`:
-   ```
-   CALLMEBOT_PHONE=+201554372442
-   CALLMEBOT_API_KEY=the_key_you_received
-   ```
-   `CALLMEBOT_PHONE` is the admin's own number in full international format **with** the `+` (Egypt `01554372442` → `+201554372442`) — this must match the number you activated in step 3.
+Unlike every other option, this talks directly to Meta's servers instead of piggybacking on a phone's WhatsApp session — so it can never "log out" or need re-linking. The trade-off is a longer one-time setup, and Meta requires all business-initiated messages (like an order alert you send *to* yourself) to use a pre-approved **message template** rather than free-form text.
 
-That's it — no account signup, no waiting for approval, works immediately. (It's an unofficial free service run by one developer, so treat it as best-effort — fine for order alerts, not for anything mission-critical. If it ever goes down, the email notifications keep working independently.)
+**What you need before starting:** a phone number that is **not currently active on the regular WhatsApp app** (Cloud API needs to own the number exclusively — you can't dual-use a number that's already logged into WhatsApp on a phone). A cheap second SIM, a VoIP number, or a spare number works fine.
+
+1. **Create a Meta Business Account** at **business.facebook.com** if you don't already have one (free).
+2. **Create an app** at **developers.facebook.com** → My Apps → Create App → choose type **"Business"** → give it a name (e.g. "Veloura Notifications").
+3. In your new app's dashboard, find **WhatsApp** in the product list and click **Set up**.
+4. Under **WhatsApp → API Setup**, you'll see a **test phone number** provided by Meta for free — you can use this to test immediately (it can only message up to 5 pre-verified recipient numbers, which is fine since you're only messaging yourself). For permanent production use, click **Add phone number** and register your own dedicated number instead (free, just requires SMS/call verification).
+5. On the same **API Setup** page, copy the **Phone Number ID** shown there (a long numeric ID, not the phone number itself).
+6. **Generate a permanent access token** (the token shown by default on the API Setup page expires in 24 hours, which will break notifications after a day):
+   - Go to **Meta Business Settings → Users → System Users** → create a new System User (e.g. "veloura-backend"), role **Admin**.
+   - Click **Add Assets**, select your app, and give it **Full control**.
+   - Click **Generate New Token** on that system user, select your app, and check the `whatsapp_business_messaging` permission. Copy the generated token — this one does not expire.
+7. **Create and submit your message template**: go to **WhatsApp Manager → Message Templates → Create Template**.
+   - Category: **Utility**
+   - Name: `order_notification` (must match `WHATSAPP_TEMPLATE_NAME` below exactly)
+   - Language: English (US) (or your choice — must match `WHATSAPP_TEMPLATE_LANG`)
+   - Body text (copy exactly, including the `{{1}}`–`{{6}}` placeholders):
+     ```
+     New Veloura order!
+
+     Order #{{1}}
+     Items: {{2}}
+     Total: {{3}} (Cash on Delivery)
+
+     Customer: {{4}}
+     Phone: {{5}}
+     Address: {{6}}
+     ```
+   - Submit for review. Utility-category templates like this are usually approved within a few minutes to a few hours, occasionally up to 1-2 business days.
+8. Once the template shows **Approved**, add to `backend/.env`:
+   ```
+   WHATSAPP_PHONE_NUMBER_ID=the_id_from_step_5
+   WHATSAPP_ACCESS_TOKEN=the_permanent_token_from_step_6
+   WHATSAPP_ADMIN_PHONE=201554372442
+   WHATSAPP_TEMPLATE_NAME=order_notification
+   WHATSAPP_TEMPLATE_LANG=en_US
+   ```
+   `WHATSAPP_ADMIN_PHONE` is the admin's number in international format, **digits only** — no `+`, no leading `0` (Egypt `01554372442` → `201554372442`). If you're still using Meta's free test number (step 4), this admin number must first be added as a verified recipient under **API Setup → To** on that same page.
+
+That's it — once approved, this never requires re-linking, re-scanning, or re-authorizing anything again.
+
+**Free tier:** the Cloud API itself is free, and Meta includes a generous number of free service conversations per month (WhatsApp's published free tier has changed over time — check the current limit on your WhatsApp Manager's billing page, but for a single low-volume admin-alert use case like this it's very unlikely you'd ever be charged).
 
 ### 10.3 Deploying with notifications
 
-Add whichever environment variables you configured (`EMAIL_USER`, `EMAIL_PASS`, `ADMIN_NOTIFICATION_EMAIL`, `CALLMEBOT_PHONE`, `CALLMEBOT_API_KEY`) to your Render or Vercel backend environment variables, then redeploy.
+Add whichever environment variables you configured (`EMAIL_USER`, `EMAIL_PASS`, `ADMIN_NOTIFICATION_EMAIL`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_ADMIN_PHONE`, `WHATSAPP_TEMPLATE_NAME`, `WHATSAPP_TEMPLATE_LANG`) to your Render or Vercel backend environment variables, then redeploy.
 
 ## 11. What's Intentionally Not Included
 

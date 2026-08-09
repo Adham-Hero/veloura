@@ -127,44 +127,84 @@ const sendAdminOrderEmail = async (order) => {
   }
 };
 
-// ---------- WhatsApp alert to the ADMIN, via CallMeBot ----------
-// Free, no business account needed - just a one-time WhatsApp opt-in message
-// to get an API key (see README section 10.2).
-const buildWhatsAppMessage = (order) => {
-  const itemsText = order.products
-    .map((item) => `- ${item.name} x${item.quantity} = ${currency(item.price * item.quantity)}`)
-    .join("\n");
+// ---------- WhatsApp alert to the ADMIN, via Meta's official WhatsApp Cloud API ----------
+// Unlike CallMeBot/Green API, this talks directly to Meta's servers - it does
+// NOT depend on any phone staying logged into a WhatsApp Web-style session,
+// so it can never "disconnect" the way session-based integrations can.
+// Requires a one-time setup in Meta's dashboard: a WhatsApp Business phone
+// number, a permanent access token, and an APPROVED message template (Meta
+// requires all business-initiated messages to use a pre-approved template).
+// See README section 10.2 for the full setup walkthrough.
+//
+// The approved template is expected to have this exact body (create it with
+// this text, category "Utility", in WhatsApp Manager -> Message Templates):
+//
+//   New Veloura order!
+//
+//   Order #{{1}}
+//   Items: {{2}}
+//   Total: {{3}} (Cash on Delivery)
+//
+//   Customer: {{4}}
+//   Phone: {{5}}
+//   Address: {{6}}
+//
+const buildWhatsAppTemplateParams = (order) => {
+  const itemsSummary = order.products.map((item) => `${item.name} x${item.quantity}`).join(", ");
 
-  return (
-    `New Veloura order!\n\n` +
-    `Order #${order._id}\n` +
-    `${itemsText}\n\n` +
-    `Total: ${currency(order.totalPrice)} (Cash on Delivery)\n\n` +
-    `Customer: ${order.shippingAddress.fullName}\n` +
-    `Phone: ${order.shippingAddress.phone}\n` +
-    `Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}`
-  );
+  return [
+    { type: "text", text: String(order._id) },
+    { type: "text", text: itemsSummary },
+    { type: "text", text: currency(order.totalPrice) },
+    { type: "text", text: order.shippingAddress.fullName },
+    { type: "text", text: order.shippingAddress.phone },
+    { type: "text", text: `${order.shippingAddress.address}, ${order.shippingAddress.city}` },
+  ];
 };
 
 const sendAdminWhatsAppMessage = async (order) => {
-  const { CALLMEBOT_PHONE, CALLMEBOT_API_KEY } = process.env;
+  const {
+    WHATSAPP_PHONE_NUMBER_ID,
+    WHATSAPP_ACCESS_TOKEN,
+    WHATSAPP_ADMIN_PHONE,
+    WHATSAPP_TEMPLATE_NAME,
+    WHATSAPP_TEMPLATE_LANG,
+  } = process.env;
 
-  if (!CALLMEBOT_PHONE || !CALLMEBOT_API_KEY) {
-    console.warn("CallMeBot not configured (CALLMEBOT_PHONE/CALLMEBOT_API_KEY missing) - skipping WhatsApp notification.");
+  if (!WHATSAPP_PHONE_NUMBER_ID || !WHATSAPP_ACCESS_TOKEN || !WHATSAPP_ADMIN_PHONE) {
+    console.warn(
+      "WhatsApp Cloud API not configured (WHATSAPP_PHONE_NUMBER_ID/WHATSAPP_ACCESS_TOKEN/WHATSAPP_ADMIN_PHONE missing) - skipping WhatsApp notification."
+    );
     return;
   }
 
   try {
-    const phone = encodeURIComponent(CALLMEBOT_PHONE); // international format, e.g. +201554372442
-    const text = encodeURIComponent(buildWhatsAppMessage(order));
-    const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${text}&apikey=${CALLMEBOT_API_KEY}`;
+    const url = `https://graph.facebook.com/v20.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: WHATSAPP_ADMIN_PHONE, // international format, digits only, no "+"
+        type: "template",
+        template: {
+          name: WHATSAPP_TEMPLATE_NAME || "order_notification",
+          language: { code: WHATSAPP_TEMPLATE_LANG || "en_US" },
+          components: [{ type: "body", parameters: buildWhatsAppTemplateParams(order) }],
+        },
+      }),
+    });
+
     if (!response.ok) {
-      throw new Error(`CallMeBot request failed with status ${response.status}`);
+      const body = await response.text();
+      throw new Error(`WhatsApp Cloud API request failed with status ${response.status}: ${body}`);
     }
   } catch (error) {
-    console.error("Failed to send admin WhatsApp message via CallMeBot:", error.message);
+    console.error("Failed to send admin WhatsApp message via WhatsApp Cloud API:", error.message);
   }
 };
 
