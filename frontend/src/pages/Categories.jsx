@@ -5,8 +5,8 @@ import StrandDivider from "../components/StrandDivider";
 import * as productService from "../services/productService";
 
 const CATEGORY_IMAGES = {
-  Shampoo: "/Img/Shampo.jpg",
-  Conditioner: "/Img/Blsm.jpg",
+  Shampoo: "Img/Shampo.jpg",
+  Conditioner: "Img/Blsm.jpg",
   "Hair Oils": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600",
   "Hair Masks": "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=600",
   "Hair Creams": "https://images.unsplash.com/photo-1601049676869-702ea24cfd58?w=600",
@@ -14,8 +14,8 @@ const CATEGORY_IMAGES = {
   "Hair Styling": "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=600",
   "Hair Accessories": "https://images.unsplash.com/photo-1620656798579-1984d9e87df7?w=600",
   "Hair Styling Tools": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600",
-  "Hair Care Set": "/Img/full care.jpg",
-  "Protein Treatment": "/Img/Proten.jpg",
+  "Hair Care Set": "Img/full care.jpg",
+  "Protein Treatment": "Img/Proten.jpg",
 };
 
 const Categories = () => {
