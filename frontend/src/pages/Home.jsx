@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import StrandDivider from "../components/StrandDivider";
+import HeroArt3D from "../components/HeroArt3D";
 import ProductCard from "../components/ProductCard";
 import * as productService from "../services/productService";
 
@@ -14,6 +15,9 @@ const CATEGORY_IMAGES = {
   "Hair Serums": "https://images.unsplash.com/photo-1610113025603-92e0af88a55c?w=500",
   "Hair Styling": "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=500",
   "Hair Accessories": "https://images.unsplash.com/photo-1620656798579-1984d9e87df7?w=500",
+  "Hair Styling Tools": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=500",
+  "Hair Care Set": "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=500",
+  "Protein Treatment": "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=500",
 };
 
 const Home = () => {
@@ -72,10 +76,7 @@ const Home = () => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="hero-v__art">
-                <img
-                  src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=900"
-                  alt="Veloura hair care"
-                />
+                <HeroArt3D />
               </div>
             </div>
           </div>

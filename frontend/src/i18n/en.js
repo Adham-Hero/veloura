@@ -167,5 +167,8 @@ export default {
     "Hair Serums": "Hair Serums",
     "Hair Styling": "Hair Styling",
     "Hair Accessories": "Hair Accessories",
+    "Hair Styling Tools": "Hair Styling Tools",
+    "Hair Care Set": "Hair Care Set",
+    "Protein Treatment": "Protein Treatment",
   },
 };

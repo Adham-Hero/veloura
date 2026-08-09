@@ -23,7 +23,7 @@ const Login = () => {
       await login(form.email, form.password);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || t("auth.invalidCredentials"));
+      setError(err.isNetworkError ? err.friendlyMessage : err.response?.data?.message || t("auth.invalidCredentials"));
     } finally {
       setLoading(false);
     }

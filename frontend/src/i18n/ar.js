@@ -166,5 +166,8 @@ export default {
     "Hair Serums": "سيروم الشعر",
     "Hair Styling": "تصفيف الشعر",
     "Hair Accessories": "إكسسوارات الشعر",
+    "Hair Styling Tools": "أدوات تصفيف الشعر",
+    "Hair Care Set": "مجموعة عناية الشعر",
+    "Protein Treatment": "بروتين",
   },
 };

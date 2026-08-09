@@ -9,6 +9,9 @@ const CATEGORIES = [
   "Hair Serums",
   "Hair Styling",
   "Hair Accessories",
+  "Hair Styling Tools",
+  "Hair Care Set",
+  "Protein Treatment",
 ];
 
 const ProductSchema = new mongoose.Schema(

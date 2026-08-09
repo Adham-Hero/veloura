@@ -14,13 +14,14 @@ const run = async () => {
     const email = (process.env.SEED_ADMIN_EMAIL || "admin@veloura.com").toLowerCase();
     const password = process.env.SEED_ADMIN_PASSWORD || "Admin123!";
 
-    let admin = await User.findOne({ email });
+    let admin = await User.findOne({ email }).select("+password");
 
     if (admin) {
       admin.role = "admin";
       admin.name = name;
+      admin.password = password; // reset password too, so re-running this script is predictable
       await admin.save();
-      console.log(`Existing user promoted to admin: ${email}`);
+      console.log(`Existing user promoted to admin and password reset: ${email}`);
     } else {
       admin = await User.create({ name, email, password, role: "admin" });
       console.log(`Admin account created: ${email}`);

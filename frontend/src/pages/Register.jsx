@@ -23,7 +23,7 @@ const Register = () => {
       await register(form.name, form.email, form.password);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || t("auth.emailExists"));
+      setError(err.isNetworkError ? err.friendlyMessage : err.response?.data?.message || t("auth.emailExists"));
     } finally {
       setLoading(false);
     }
