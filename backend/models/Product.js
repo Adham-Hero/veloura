@@ -4,14 +4,11 @@ const CATEGORIES = [
   "Shampoo",
   "Conditioner",
   "Hair Oils",
-  "Hair Masks",
   "Hair Creams",
-  "Hair Serums",
-  "Hair Styling",
-  "Hair Accessories",
   "Hair Styling Tools",
   "Hair Care Set",
   "Protein Treatment",
+  "Latest Offers",
 ];
 
 const ProductSchema = new mongoose.Schema(

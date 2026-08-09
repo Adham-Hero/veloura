@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import StrandDivider from "../components/StrandDivider";
-import HeroArt3D from "../components/HeroArt3D";
 import ProductCard from "../components/ProductCard";
 import * as productService from "../services/productService";
 
@@ -13,14 +12,11 @@ const CATEGORY_IMAGES = {
   Shampoo: "/images/categories/shampoo.jpg",
   Conditioner: "/images/categories/conditioner.jpg",
   "Hair Oils": "/images/categories/hair-oils.jpg",
-  "Hair Masks": "/images/categories/hair-masks.jpg",
   "Hair Creams": "/images/categories/hair-creams.jpg",
-  "Hair Serums": "/images/categories/hair-serums.jpg",
-  "Hair Styling": "/images/categories/hair-styling.jpg",
-  "Hair Accessories": "/images/categories/hair-accessories.jpg",
   "Hair Styling Tools": "/images/categories/hair-styling-tools.jpg",
   "Hair Care Set": "/images/categories/hair-care-set.jpg",
   "Protein Treatment": "/images/categories/protein-treatment.jpg",
+  "Latest Offers": "/images/categories/latest-offers.jpg",
 };
 
 const Home = () => {
@@ -78,8 +74,9 @@ const Home = () => {
               </div>
             </div>
             <div className="col-12 col-lg-6">
-              <div className="hero-v__art">
-                <HeroArt3D />
+              <div className="hero-v__logo-wrap">
+                <div className="hero-v__logo-glow" />
+                <img src="/images/brand/veloura-logo.jpg" alt="Veloura" className="hero-v__logo" />
               </div>
             </div>
           </div>

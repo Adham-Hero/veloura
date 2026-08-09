@@ -253,13 +253,15 @@ Products currently use plain image URLs (see `image` field). The `Product` schem
 ## 10. Order Notifications (Email + WhatsApp)
 
 When a customer places an order (Cash on Delivery — no payment gateway is integrated), Veloura automatically:
-1. Emails an **invoice** to the customer
+1. Emails an **invoice** to the customer (buyer) — full order breakdown, total, and shipping details
 2. Emails a **new order alert** to the admin
-3. Sends a **WhatsApp message** with the order details to the admin's phone
+3. Sends a **WhatsApp message** with the order details to the admin's phone, via CallMeBot
 
 All three are optional and independent — if you don't configure a channel, it's silently skipped and the order still succeeds normally. Nothing about checkout ever fails because of a notification problem.
 
-### 10.1 Email setup (Gmail)
+**Why the buyer gets their invoice by email, not WhatsApp:** CallMeBot only works for a phone number that has personally opted in by messaging the bot (that's how it verifies who it's allowed to message). Since customers never do that opt-in step, there's no way to WhatsApp them automatically — email is the only channel that works for an arbitrary buyer. The buyer invoice email is fully automatic already; no extra setup beyond section 10.1 below.
+
+### 10.1 Email setup (Gmail) — needed for BOTH the buyer invoice and the admin alert email
 
 1. Go to your Google Account → **Security** → enable **2-Step Verification** (required for App Passwords).
 2. Go to **myaccount.google.com/apppasswords**, create a new App Password (choose "Mail" / "Other").
@@ -271,13 +273,9 @@ All three are optional and independent — if you don't configure a channel, it'
    ADMIN_NOTIFICATION_EMAIL=eltonyahmed232@gmail.com
    ```
 
-`EMAIL_USER` is the Gmail account that *sends* the emails (can be any Gmail you control). `ADMIN_NOTIFICATION_EMAIL` is where the "new order" alert is *received* — set it to `eltonyahmed232@gmail.com`.
+`EMAIL_USER` is the Gmail account that *sends* the emails (can be any Gmail you control) — it's used both to email the buyer their invoice and to email you the order alert. `ADMIN_NOTIFICATION_EMAIL` is where the "new order" alert is *received* — set it to `eltonyahmed232@gmail.com`.
 
-### 10.2 WhatsApp setup — choose ONE option
-
-You only need to set up **one** of these two — the app checks CallMeBot first, then falls back to Twilio if CallMeBot isn't configured.
-
-#### Option A: CallMeBot (recommended — simplest, free, no business account)
+### 10.2 WhatsApp setup (CallMeBot — free, no business account)
 
 1. Go to **callmebot.com/blog/free-api-whatsapp-messages** and find the current bot's phone number (it's shown at the top of the "Setup" section — this number rotates occasionally when the free bot fills up, so always use the number listed on that page, not an old one from elsewhere).
 2. Save that number as a contact on the admin's phone (`01554372442`).
@@ -290,29 +288,11 @@ You only need to set up **one** of these two — the app checks CallMeBot first,
    ```
    `CALLMEBOT_PHONE` is the admin's own number in full international format **with** the `+` (Egypt `01554372442` → `+201554372442`) — this must match the number you activated in step 3.
 
-That's it — no account signup, no waiting for approval, works immediately. (It's an unofficial free service run by one developer, so treat it as best-effort — fine for order alerts, not for anything mission-critical.)
-
-#### Option B: Twilio WhatsApp Sandbox (more "official", free for sandbox use)
-
-1. Create a free account at **twilio.com** (no credit card charge for sandbox use).
-2. In the Twilio Console, go to **Messaging → Try it out → Send a WhatsApp message**. You'll see a sandbox number (e.g. `+14155238886`) and a join code (e.g. `join happy-tiger`).
-3. From the WhatsApp on the admin's phone (`01554372442`), send that join code as a WhatsApp message to the sandbox number. This links that phone to your sandbox — required once.
-4. From the Twilio Console, copy your **Account SID** and **Auth Token** (top of the dashboard).
-5. In `backend/.env`:
-   ```
-   TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-   TWILIO_AUTH_TOKEN=your_auth_token
-   TWILIO_WHATSAPP_FROM=+14155238886
-   ADMIN_WHATSAPP_NUMBER=+201554372442
-   ```
-
-Numbers must be in international format with a leading `+` (Egypt = `+20`, so `01554372442` becomes `+201554372442`).
-
-**Note:** the Twilio sandbox requires re-joining every ~72 hours of inactivity (Twilio will remind you by WhatsApp). For a permanent production WhatsApp number with no re-join requirement on either option, you'd apply for a Meta-approved WhatsApp Business number (through Twilio or directly via Meta's Cloud API), which is a longer approval process but removes these limitations.
+That's it — no account signup, no waiting for approval, works immediately. (It's an unofficial free service run by one developer, so treat it as best-effort — fine for order alerts, not for anything mission-critical. If it ever goes down, the email notifications keep working independently.)
 
 ### 10.3 Deploying with notifications
 
-Add whichever environment variables you configured (`EMAIL_USER`, `EMAIL_PASS`, `ADMIN_NOTIFICATION_EMAIL`, and either `CALLMEBOT_PHONE`+`CALLMEBOT_API_KEY` or the four `TWILIO_*`/`ADMIN_WHATSAPP_NUMBER` vars) to your Render or Vercel backend environment variables, then redeploy.
+Add whichever environment variables you configured (`EMAIL_USER`, `EMAIL_PASS`, `ADMIN_NOTIFICATION_EMAIL`, `CALLMEBOT_PHONE`, `CALLMEBOT_API_KEY`) to your Render or Vercel backend environment variables, then redeploy.
 
 ## 11. What's Intentionally Not Included
 

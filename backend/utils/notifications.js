@@ -127,10 +127,9 @@ const sendAdminOrderEmail = async (order) => {
   }
 };
 
-// ---------- WhatsApp alert to the ADMIN ----------
-// Supports two providers - whichever is configured gets used:
-//  1) CallMeBot: simplest option, free, no business account needed
-//  2) Twilio: more "official" option, needs a Twilio account + sandbox join
+// ---------- WhatsApp alert to the ADMIN, via CallMeBot ----------
+// Free, no business account needed - just a one-time WhatsApp opt-in message
+// to get an API key (see README section 10.2).
 const buildWhatsAppMessage = (order) => {
   const itemsText = order.products
     .map((item) => `- ${item.name} x${item.quantity} = ${currency(item.price * item.quantity)}`)
@@ -147,53 +146,26 @@ const buildWhatsAppMessage = (order) => {
   );
 };
 
-// Option 1: CallMeBot (https://www.callmebot.com/blog/free-api-whatsapp-messages/)
-// Free, no business account, just a one-time WhatsApp opt-in message to get an API key.
-const sendViaCallMeBot = async (order) => {
-  const { CALLMEBOT_PHONE, CALLMEBOT_API_KEY } = process.env;
-  if (!CALLMEBOT_PHONE || !CALLMEBOT_API_KEY) return false;
-
-  const phone = encodeURIComponent(CALLMEBOT_PHONE); // expects international format, e.g. +201554372442
-  const text = encodeURIComponent(buildWhatsAppMessage(order));
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${text}&apikey=${CALLMEBOT_API_KEY}`;
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`CallMeBot request failed with status ${response.status}`);
-  }
-  return true;
-};
-
-// Option 2: Twilio WhatsApp Sandbox/API
-const sendViaTwilio = async (order) => {
-  const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_FROM, ADMIN_WHATSAPP_NUMBER } = process.env;
-  if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_FROM || !ADMIN_WHATSAPP_NUMBER) return false;
-
-  const twilio = require("twilio");
-  const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-
-  await client.messages.create({
-    from: `whatsapp:${TWILIO_WHATSAPP_FROM}`,
-    to: `whatsapp:${ADMIN_WHATSAPP_NUMBER}`,
-    body: buildWhatsAppMessage(order),
-  });
-  return true;
-};
-
 const sendAdminWhatsAppMessage = async (order) => {
-  try {
-    if (await sendViaCallMeBot(order)) return;
-  } catch (error) {
-    console.error("Failed to send WhatsApp via CallMeBot:", error.message);
+  const { CALLMEBOT_PHONE, CALLMEBOT_API_KEY } = process.env;
+
+  if (!CALLMEBOT_PHONE || !CALLMEBOT_API_KEY) {
+    console.warn("CallMeBot not configured (CALLMEBOT_PHONE/CALLMEBOT_API_KEY missing) - skipping WhatsApp notification.");
+    return;
   }
 
   try {
-    if (await sendViaTwilio(order)) return;
-  } catch (error) {
-    console.error("Failed to send WhatsApp via Twilio:", error.message);
-  }
+    const phone = encodeURIComponent(CALLMEBOT_PHONE); // international format, e.g. +201554372442
+    const text = encodeURIComponent(buildWhatsAppMessage(order));
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&text=${text}&apikey=${CALLMEBOT_API_KEY}`;
 
-  console.warn("No WhatsApp provider configured (CallMeBot or Twilio) - skipping WhatsApp notification.");
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`CallMeBot request failed with status ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Failed to send admin WhatsApp message via CallMeBot:", error.message);
+  }
 };
 
 // Fires all notifications for a newly created order. Every notification is

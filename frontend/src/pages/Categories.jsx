@@ -11,14 +11,11 @@ const CATEGORY_IMAGES = {
   Shampoo: "/images/categories/shampoo.jpg",
   Conditioner: "/images/categories/conditioner.jpg",
   "Hair Oils": "/images/categories/hair-oils.jpg",
-  "Hair Masks": "/images/categories/hair-masks.jpg",
   "Hair Creams": "/images/categories/hair-creams.jpg",
-  "Hair Serums": "/images/categories/hair-serums.jpg",
-  "Hair Styling": "/images/categories/hair-styling.jpg",
-  "Hair Accessories": "/images/categories/hair-accessories.jpg",
   "Hair Styling Tools": "/images/categories/hair-styling-tools.jpg",
   "Hair Care Set": "/images/categories/hair-care-set.jpg",
   "Protein Treatment": "/images/categories/protein-treatment.jpg",
+  "Latest Offers": "/images/categories/latest-offers.jpg",
 };
 
 const Categories = () => {

@@ -18,14 +18,11 @@ const CATEGORIES = [
   "Shampoo",
   "Conditioner",
   "Hair Oils",
-  "Hair Masks",
   "Hair Creams",
-  "Hair Serums",
-  "Hair Styling",
-  "Hair Accessories",
   "Hair Styling Tools",
   "Hair Care Set",
   "Protein Treatment",
+  "Latest Offers",
 ];
 
 const AdminProductForm = ({ product, onCancel, onSubmit, saving }) => {

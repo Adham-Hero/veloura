@@ -29,8 +29,9 @@ const Navbar = () => {
   return (
     <nav className="navbar-v py-3">
       <div className="container-v d-flex align-items-center justify-content-between">
-        <Link to="/" className="logo">
-          Veloura
+        <Link to="/" className="logo navbar-v__brand">
+          <img src="/images/brand/veloura-logo-small.jpg" alt="Veloura" className="navbar-v__logo-img" />
+          <span>Veloura</span>
         </Link>
 
         <div className="d-none d-lg-flex align-items-center gap-1">
