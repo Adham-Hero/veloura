@@ -549,6 +549,19 @@ img {
   font-size: 0.82rem;
   color: var(--v-text-muted);
 }
+.footer-v__credit {
+  display: inline;
+}
+.footer-v__credit a {
+  display: inline;
+  padding: 0;
+  color: var(--v-rose);
+  font-weight: 500;
+  opacity: 1;
+}
+.footer-v__credit a:hover {
+  text-decoration: underline;
+}
 .footer-v__social {
   display: flex;
   gap: 10px;
