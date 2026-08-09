@@ -8,8 +8,8 @@ const CATEGORY_PLACEHOLDER =
   "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23f3e9e4'/%3E%3Ctext x='200' y='250' font-family='sans-serif' font-size='18' fill='%23a08c8f' text-anchor='middle'%3EImage coming soon%3C/text%3E%3C/svg%3E";
 
 const CATEGORY_IMAGES = {
-  Shampoo: "/images/categories/shampo.jpg",
-  Conditioner: "/images/categories/blsm.jpg",
+  Shampoo: "/images/categories/shampoo.jpg",
+  Conditioner: "/images/categories/conditioner.jpg",
   "Hair Oils": "/images/categories/hair-oils.jpg",
   "Hair Masks": "/images/categories/hair-masks.jpg",
   "Hair Creams": "/images/categories/hair-creams.jpg",
@@ -17,8 +17,8 @@ const CATEGORY_IMAGES = {
   "Hair Styling": "/images/categories/hair-styling.jpg",
   "Hair Accessories": "/images/categories/hair-accessories.jpg",
   "Hair Styling Tools": "/images/categories/hair-styling-tools.jpg",
-  "Hair Care Set": "/images/categories/fullcare.jpg",
-  "Protein Treatment": "/images/categories/proten.jpg",
+  "Hair Care Set": "/images/categories/hair-care-set.jpg",
+  "Protein Treatment": "/images/categories/protein-treatment.jpg",
 };
 
 const Categories = () => {
