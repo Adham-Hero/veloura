@@ -5,8 +5,8 @@ import StrandDivider from "../components/StrandDivider";
 import * as productService from "../services/productService";
 
 const CATEGORY_IMAGES = {
-  Shampoo: "https://images.unsplash.com/photo-1585232004423-3e14f4306e0f?w=600",
-  Conditioner: "https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=600",
+  Shampoo: "/Img/Shampo.jpg",
+    Conditioner: "/Img/Blsm.jpg",
   "Hair Oils": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600",
   "Hair Masks": "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=600",
   "Hair Creams": "https://images.unsplash.com/photo-1601049676869-702ea24cfd58?w=600",
