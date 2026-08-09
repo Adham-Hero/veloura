@@ -22,7 +22,7 @@ const SOCIAL_LINKS = [
   },
   {
     name: "TikTok",
-    url: "https://tiktok.com/@veloura",
+    url: "https://tiktok.com",
     icon: (
       <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
         <path d="M16.5 3h-3.02v12.4a2.59 2.59 0 1 1-1.83-2.47V9.83a5.7 5.7 0 1 0 4.85 5.63V9.9a6.98 6.98 0 0 0 4 1.27V8.14a3.98 3.98 0 0 1-1.87-.48A4.02 4.02 0 0 1 16.5 3.9V3Z" />
