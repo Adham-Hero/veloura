@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const { notifyNewOrder } = require("../utils/notifications");
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -56,6 +57,15 @@ const createOrder = async (req, res, next) => {
       totalPrice,
       shippingAddress,
     });
+
+    // Send the customer invoice + admin email + admin WhatsApp alert.
+    // notifyNewOrder() never throws (every channel is independently caught
+    // inside it), so a failed email/WhatsApp send can NEVER fail the order
+    // itself - the customer's order is already saved in MongoDB at this point.
+    // We await it here (rather than firing-and-forgetting) because on
+    // serverless platforms like Vercel, background work can be killed the
+    // moment the response is sent - awaiting guarantees delivery is attempted.
+    await notifyNewOrder(order);
 
     res.status(201).json(order);
   } catch (error) {

@@ -250,7 +250,71 @@ curl -X POST http://localhost:5000/api/products \
 
 Products currently use plain image URLs (see `image` field). The `Product` schema is deliberately simple so it's a drop-in fit for Cloudinary later: swap the URL you save into `image` for a Cloudinary `secure_url` after uploading, no schema changes needed.
 
-## 10. What's Intentionally Not Included
+## 10. Order Notifications (Email + WhatsApp)
+
+When a customer places an order (Cash on Delivery — no payment gateway is integrated), Veloura automatically:
+1. Emails an **invoice** to the customer
+2. Emails a **new order alert** to the admin
+3. Sends a **WhatsApp message** with the order details to the admin's phone
+
+All three are optional and independent — if you don't configure a channel, it's silently skipped and the order still succeeds normally. Nothing about checkout ever fails because of a notification problem.
+
+### 10.1 Email setup (Gmail)
+
+1. Go to your Google Account → **Security** → enable **2-Step Verification** (required for App Passwords).
+2. Go to **myaccount.google.com/apppasswords**, create a new App Password (choose "Mail" / "Other").
+3. Copy the 16-character password it gives you.
+4. In `backend/.env`:
+   ```
+   EMAIL_USER=your-gmail-address@gmail.com
+   EMAIL_PASS=the_16_char_app_password
+   ADMIN_NOTIFICATION_EMAIL=eltonyahmed232@gmail.com
+   ```
+
+`EMAIL_USER` is the Gmail account that *sends* the emails (can be any Gmail you control). `ADMIN_NOTIFICATION_EMAIL` is where the "new order" alert is *received* — set it to `eltonyahmed232@gmail.com`.
+
+### 10.2 WhatsApp setup — choose ONE option
+
+You only need to set up **one** of these two — the app checks CallMeBot first, then falls back to Twilio if CallMeBot isn't configured.
+
+#### Option A: CallMeBot (recommended — simplest, free, no business account)
+
+1. Go to **callmebot.com/blog/free-api-whatsapp-messages** and find the current bot's phone number (it's shown at the top of the "Setup" section — this number rotates occasionally when the free bot fills up, so always use the number listed on that page, not an old one from elsewhere).
+2. Save that number as a contact on the admin's phone (`01554372442`).
+3. Send it this exact WhatsApp message: `I allow callmebot to send me messages`
+4. Within a minute you'll receive a reply: *"API Activated for your phone number. Your APIKEY is ..."* — that number is your API key. (If nothing arrives within 2 minutes, wait 24h and try again — the free bot rate-limits new signups.)
+5. In `backend/.env`:
+   ```
+   CALLMEBOT_PHONE=+201554372442
+   CALLMEBOT_API_KEY=the_key_you_received
+   ```
+   `CALLMEBOT_PHONE` is the admin's own number in full international format **with** the `+` (Egypt `01554372442` → `+201554372442`) — this must match the number you activated in step 3.
+
+That's it — no account signup, no waiting for approval, works immediately. (It's an unofficial free service run by one developer, so treat it as best-effort — fine for order alerts, not for anything mission-critical.)
+
+#### Option B: Twilio WhatsApp Sandbox (more "official", free for sandbox use)
+
+1. Create a free account at **twilio.com** (no credit card charge for sandbox use).
+2. In the Twilio Console, go to **Messaging → Try it out → Send a WhatsApp message**. You'll see a sandbox number (e.g. `+14155238886`) and a join code (e.g. `join happy-tiger`).
+3. From the WhatsApp on the admin's phone (`01554372442`), send that join code as a WhatsApp message to the sandbox number. This links that phone to your sandbox — required once.
+4. From the Twilio Console, copy your **Account SID** and **Auth Token** (top of the dashboard).
+5. In `backend/.env`:
+   ```
+   TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   TWILIO_AUTH_TOKEN=your_auth_token
+   TWILIO_WHATSAPP_FROM=+14155238886
+   ADMIN_WHATSAPP_NUMBER=+201554372442
+   ```
+
+Numbers must be in international format with a leading `+` (Egypt = `+20`, so `01554372442` becomes `+201554372442`).
+
+**Note:** the Twilio sandbox requires re-joining every ~72 hours of inactivity (Twilio will remind you by WhatsApp). For a permanent production WhatsApp number with no re-join requirement on either option, you'd apply for a Meta-approved WhatsApp Business number (through Twilio or directly via Meta's Cloud API), which is a longer approval process but removes these limitations.
+
+### 10.3 Deploying with notifications
+
+Add whichever environment variables you configured (`EMAIL_USER`, `EMAIL_PASS`, `ADMIN_NOTIFICATION_EMAIL`, and either `CALLMEBOT_PHONE`+`CALLMEBOT_API_KEY` or the four `TWILIO_*`/`ADMIN_WHATSAPP_NUMBER` vars) to your Render or Vercel backend environment variables, then redeploy.
+
+## 11. What's Intentionally Not Included
 
 - Real payment processing (Stripe, etc.) — the checkout flow and `Order` model are structured so a payment step can be added between "place order" and "order confirmed" without restructuring anything.
 - Image file uploads — development uses image URLs, per the brief.
