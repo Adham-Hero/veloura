@@ -4,18 +4,21 @@ import { useLanguage } from "../context/LanguageContext";
 import StrandDivider from "../components/StrandDivider";
 import * as productService from "../services/productService";
 
+const CATEGORY_PLACEHOLDER =
+  "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23f3e9e4'/%3E%3Ctext x='200' y='250' font-family='sans-serif' font-size='18' fill='%23a08c8f' text-anchor='middle'%3EImage coming soon%3C/text%3E%3C/svg%3E";
+
 const CATEGORY_IMAGES = {
-  Shampoo: "/img/Shampo.jpg",
-  Conditioner: "/img/Blsm.jpg",
-  "Hair Oils": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600",
-  "Hair Masks": "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=600",
-  "Hair Creams": "https://images.unsplash.com/photo-1601049676869-702ea24cfd58?w=600",
-  "Hair Serums": "https://images.unsplash.com/photo-1610113025603-92e0af88a55c?w=600",
-  "Hair Styling": "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=600",
-  "Hair Accessories": "https://images.unsplash.com/photo-1620656798579-1984d9e87df7?w=600",
-  "Hair Styling Tools": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600",
-  "Hair Care Set": "/img/full care.jpg",
-  "Protein Treatment": "/img/Proten.jpg",
+  Shampoo: "/images/categories/shampoo.jpg",
+  Conditioner: "/images/categories/conditioner.jpg",
+  "Hair Oils": "/images/categories/hair-oils.jpg",
+  "Hair Masks": "/images/categories/hair-masks.jpg",
+  "Hair Creams": "/images/categories/hair-creams.jpg",
+  "Hair Serums": "/images/categories/hair-serums.jpg",
+  "Hair Styling": "/images/categories/hair-styling.jpg",
+  "Hair Accessories": "/images/categories/hair-accessories.jpg",
+  "Hair Styling Tools": "/images/categories/hair-styling-tools.jpg",
+  "Hair Care Set": "/images/categories/hair-care-set.jpg",
+  "Protein Treatment": "/images/categories/protein-treatment.jpg",
 };
 
 const Categories = () => {
@@ -37,7 +40,14 @@ const Categories = () => {
         {categories.map((cat) => (
           <div className="col-6 col-md-4 col-lg-3" key={cat}>
             <Link to={`/shop?category=${encodeURIComponent(cat)}`} className="category-tile">
-              <img src={CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.Shampoo} alt={cat} />
+              <img
+              src={CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.Shampoo}
+              alt={cat}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = CATEGORY_PLACEHOLDER;
+              }}
+            />
               <span className="category-tile__label">{t(`categories.${cat}`)}</span>
             </Link>
           </div>

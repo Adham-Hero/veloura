@@ -14,8 +14,7 @@ export default {
   },
   home: {
     heroTitle: "Because Your Hair Deserves The Best.",
-    heroSubtitle:
-      "Discover premium hair care crafted to bring out the natural beauty and strength of every strand.",
+    heroSubtitle:"Discover premium hair care crafted to bring out the natural beauty and strength of every strand.",
     shopNow: "Shop Now",
     exploreCategories: "Explore Categories",
     categoriesTitle: "Shop by Category",
