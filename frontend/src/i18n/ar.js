@@ -13,7 +13,7 @@ export default {
     myAccount: "حسابي",
   },
   home: {
-    heroTitle: "شعرك، توقيعك الخاص.",
+    heroTitle: ".لان شعرك يستحق الافضل",
     heroSubtitle: "اكتشفي منتجات عناية فاخرة بالشعر صُممت لإبراز جمال وقوة كل خصلة.",
     shopNow: "تسوقي الآن",
     exploreCategories: "استكشفي الأقسام",
