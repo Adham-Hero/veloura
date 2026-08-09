@@ -24,8 +24,8 @@ const Footer = () => {
           </div>
           <div className="col-6 col-md-4">
             <h6>{t("footer.contactUs")}</h6>
-            <a href="mailto:hello@veloura.com">hello@veloura.com</a>
-            <a href="tel:+10000000000">+1 (000) 000-0000</a>
+            <a href="mailto:eltonyahmed232@gmail.com">eltonyahmed232@gmail.com</a>
+            <a href="tel:+201554372442">01554372442</a>
           </div>
         </div>
         <div className="footer-v__bottom">
