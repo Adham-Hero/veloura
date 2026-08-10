@@ -48,7 +48,11 @@ body.font-ar {
 
 html,
 body {
-  overflow-x: hidden;
+  /* overflow-x: hidden on an ancestor silently breaks position:sticky on any
+     descendant (like the navbar) in every major browser - clip achieves the
+     same "no horizontal scrollbar" result without creating that scrolling
+     context, so sticky positioning keeps working normally. */
+  overflow-x: clip;
 }
 
 body {
