@@ -23,7 +23,7 @@ const CATEGORIES = [
   "Hair Care Set",
   "Protein Treatment",
   "Latest Offers",
-  "Handmade Bag",
+  "Handmade Bags",
 ];
 
 const AdminProductForm = ({ product, onCancel, onSubmit, saving }) => {
