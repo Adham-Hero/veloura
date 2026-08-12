@@ -16,7 +16,7 @@ const CATEGORY_IMAGES = {
   "Hair Care Set": "/images/categories/hair-care-set.jpg",
   "Protein Treatment": "/images/categories/protein-treatment.jpg",
   "Latest Offers": "/images/categories/latest-offers.jpg",
-  "Handmade Bags": "/images/categories/handmade-bags.jpg",
+  "Handmade Bags": "/images/categories/handmade-bags.jp",
 };
 
 const Categories = () => {
