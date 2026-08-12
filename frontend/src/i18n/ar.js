@@ -12,9 +12,11 @@ export default {
     admin: "لوحة التحكم",
     myAccount: "حسابي",
   },
+
   home: {
     heroTitle: "لان شعرك يستحق الافضل.",
-    heroSubtitle: "اكتشفي منتجات عناية فاخرة بالشعر صُممت لإبراز جمال وقوة كل خصلة.",
+    heroSubtitle:
+      "اكتشفي منتجات عناية فاخرة بالشعر صُممت لإبراز جمال وقوة كل خصلة.",
     shopNow: "تسوقي الآن",
     exploreCategories: "استكشفي الأقسام",
     categoriesTitle: "تسوقي حسب القسم",
@@ -24,11 +26,13 @@ export default {
     promoSubtitle: "وفري حتى 25% على مجموعة الإصلاح المميزة.",
     promoCta: "تسوقي العرض",
     newsletterTitle: "انضمي إلى عائلة فيلورا",
-    newsletterSubtitle: "اشتركي للحصول على عروض حصرية ونصائح للعناية بالشعر ووصول المنتجات الجديدة.",
+    newsletterSubtitle:
+      "اشتركي للحصول على عروض حصرية ونصائح للعناية بالشعر ووصول المنتجات الجديدة.",
     newsletterPlaceholder: "أدخلي بريدك الإلكتروني",
     newsletterButton: "اشتراك",
     newsletterSuccess: "شكراً لاشتراكك!",
   },
+
   shop: {
     title: "تسوقي جميع المنتجات",
     searchPlaceholder: "ابحثي عن منتجات...",
@@ -47,6 +51,7 @@ export default {
     page: "صفحة",
     of: "من",
   },
+
   product: {
     description: "الوصف",
     quantity: "الكمية",
@@ -55,6 +60,7 @@ export default {
     addedToCart: "تمت الإضافة إلى السلة!",
     notFound: "المنتج غير موجود.",
   },
+
   cart: {
     title: "سلة التسوق",
     empty: "سلتك فارغة.",
@@ -67,6 +73,7 @@ export default {
     remove: "إزالة",
     checkout: "المتابعة للدفع",
   },
+
   checkout: {
     title: "إتمام الطلب",
     fullName: "الاسم الكامل",
@@ -81,6 +88,7 @@ export default {
     orderNumber: "رقم الطلب",
     backToHome: "العودة إلى الرئيسية",
   },
+
   auth: {
     loginTitle: "مرحباً بعودتك",
     registerTitle: "أنشئي حسابك",
@@ -98,6 +106,7 @@ export default {
     loginSuccess: "تم تسجيل الدخول بنجاح!",
     registerSuccess: "تم إنشاء الحساب بنجاح!",
   },
+
   admin: {
     dashboard: "لوحة التحكم",
     products: "المنتجات",
@@ -130,33 +139,40 @@ export default {
     productSaved: "تم حفظ المنتج بنجاح.",
     productDeleted: "تم حذف المنتج بنجاح.",
   },
+
   about: {
     title: "عن فيلورا",
-    body1: "تأسست فيلورا على إيمان بسيط: كل خصلة شعر تستحق أن تُعامل كتوقيع مميز، لا كتفصيل ثانوي.",
+    body1:
+      "تأسست فيلورا على إيمان بسيط: كل خصلة شعر تستحق أن تُعامل كتوقيع مميز، لا كتفصيل ثانوي.",
     body2:
       "نصنع تركيباتنا من مكونات فاخرة تحب الشعر، ونمزج بين العلم الحديث وطقوس الجمال الخالدة لمساعدتك على الظهور والشعور بأفضل حال، كل يوم.",
   },
+
   contact: {
     title: "اتصلي بنا",
-    subtitle: "يسعدنا سماع رأيك. أرسلي لنا رسالة وسنرد عليك في أقرب وقت ممكن.",
+    subtitle:
+      "يسعدنا سماع رأيك. أرسلي لنا رسالة وسنرد عليك في أقرب وقت ممكن.",
     name: "اسمك",
     email: "بريدك الإلكتروني",
     message: "الرسالة",
     send: "إرسال الرسالة",
     sent: "تم إرسال رسالتك!",
   },
+
   footer: {
     tagline: "عناية فاخرة بالشعر لإطلالتك اليومية المميزة.",
     quickLinks: "روابط سريعة",
     contactUs: "اتصلي بنا",
     rights: "جميع الحقوق محفوظة.",
   },
+
   common: {
     loading: "جاري التحميل...",
     error: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     currency: "$",
     required: "هذا الحقل مطلوب",
   },
+
   categories: {
     Shampoo: "شامبو",
     Conditioner: "بلسم",
@@ -166,5 +182,6 @@ export default {
     "Hair Care Set": "مجموعة عناية الشعر",
     "Protein Treatment": "بروتين",
     "Latest Offers": "أحدث العروض",
+    "Handmade Bags": "شنط هاند ميد",
   },
 };
