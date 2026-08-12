@@ -16,6 +16,7 @@ const CATEGORY_IMAGES = {
   "Hair Care Set": "/images/categories/hair-care-set.jpg",
   "Protein Treatment": "/images/categories/protein-treatment.jpg",
   "Latest Offers": "/images/categories/latest-offers.jpg",
+  "Handmade Bags": "/images/categories/handmade-bags.jpg",
 };
 
 const Categories = () => {
@@ -23,29 +24,45 @@ const Categories = () => {
   const [categories, setCategories] = useState(Object.keys(CATEGORY_IMAGES));
 
   useEffect(() => {
-    productService.getCategories().then((cats) => cats.length && setCategories(cats)).catch(() => {});
+    productService
+      .getCategories()
+      .then((cats) => {
+        if (cats.length) {
+          setCategories(cats);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   return (
     <div className="container-v section-v">
       <div className="text-center mb-5">
         <span className="eyebrow-v">Veloura</span>
-        <h1 className="section-title-v">{t("home.categoriesTitle")}</h1>
+        <h1 className="section-title-v">
+          {t("home.categoriesTitle")}
+        </h1>
         <StrandDivider center />
       </div>
+
       <div className="row g-4">
         {categories.map((cat) => (
           <div className="col-6 col-md-4 col-lg-3" key={cat}>
-            <Link to={`/shop?category=${encodeURIComponent(cat)}`} className="category-tile">
+            <Link
+              to={`/shop?category=${encodeURIComponent(cat)}`}
+              className="category-tile"
+            >
               <img
-              src={CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.Shampoo}
-              alt={cat}
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = CATEGORY_PLACEHOLDER;
-              }}
-            />
-              <span className="category-tile__label">{t(`categories.${cat}`)}</span>
+                src={CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.Shampoo}
+                alt={cat}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = CATEGORY_PLACEHOLDER;
+                }}
+              />
+
+              <span className="category-tile__label">
+                {t(`categories.${cat}`)}
+              </span>
             </Link>
           </div>
         ))}
