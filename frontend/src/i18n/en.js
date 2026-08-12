@@ -12,9 +12,11 @@ export default {
     admin: "Admin Dashboard",
     myAccount: "My Account",
   },
+
   home: {
     heroTitle: "Because Your Hair Deserves The Best.",
-    heroSubtitle:"Discover premium hair care crafted to bring out the natural beauty and strength of every strand.",
+    heroSubtitle:
+      "Discover premium hair care crafted to bring out the natural beauty and strength of every strand.",
     shopNow: "Shop Now",
     exploreCategories: "Explore Categories",
     categoriesTitle: "Shop by Category",
@@ -24,11 +26,13 @@ export default {
     promoSubtitle: "Save up to 25% on our signature repair collection.",
     promoCta: "Shop the Offer",
     newsletterTitle: "Join the Veloura Circle",
-    newsletterSubtitle: "Subscribe for exclusive offers, hair tips, and new arrivals.",
+    newsletterSubtitle:
+      "Subscribe for exclusive offers, hair tips, and new arrivals.",
     newsletterPlaceholder: "Enter your email",
     newsletterButton: "Subscribe",
     newsletterSuccess: "Thank you for subscribing!",
   },
+
   shop: {
     title: "Shop All Products",
     searchPlaceholder: "Search products...",
@@ -47,6 +51,7 @@ export default {
     page: "Page",
     of: "of",
   },
+
   product: {
     description: "Description",
     quantity: "Quantity",
@@ -55,6 +60,7 @@ export default {
     addedToCart: "Added to cart!",
     notFound: "Product not found.",
   },
+
   cart: {
     title: "Shopping Cart",
     empty: "Your cart is empty.",
@@ -67,6 +73,7 @@ export default {
     remove: "Remove",
     checkout: "Proceed to Checkout",
   },
+
   checkout: {
     title: "Checkout",
     fullName: "Full Name",
@@ -81,6 +88,7 @@ export default {
     orderNumber: "Order Number",
     backToHome: "Back to Home",
   },
+
   auth: {
     loginTitle: "Welcome Back",
     registerTitle: "Create Your Account",
@@ -98,6 +106,7 @@ export default {
     loginSuccess: "Logged in successfully!",
     registerSuccess: "Account created successfully!",
   },
+
   admin: {
     dashboard: "Admin Dashboard",
     products: "Products",
@@ -130,6 +139,7 @@ export default {
     productSaved: "Product saved successfully.",
     productDeleted: "Product deleted successfully.",
   },
+
   about: {
     title: "About Veloura",
     body1:
@@ -137,27 +147,32 @@ export default {
     body2:
       "We craft our formulas with premium, hair-loving ingredients, blending modern science with timeless beauty rituals to help you look and feel your best, every single day.",
   },
+
   contact: {
     title: "Contact Us",
-    subtitle: "We'd love to hear from you. Send us a message and we'll respond as soon as we can.",
+    subtitle:
+      "We'd love to hear from you. Send us a message and we'll respond as soon as we can.",
     name: "Your Name",
     email: "Your Email",
     message: "Message",
     send: "Send Message",
     sent: "Your message has been sent!",
   },
+
   footer: {
     tagline: "Premium hair care for your everyday signature look.",
     quickLinks: "Quick Links",
     contactUs: "Contact Us",
     rights: "All rights reserved.",
   },
+
   common: {
     loading: "Loading...",
     error: "Something went wrong. Please try again.",
     currency: "$",
     required: "This field is required",
   },
+
   categories: {
     Shampoo: "Shampoo",
     Conditioner: "Conditioner",
@@ -167,5 +182,6 @@ export default {
     "Hair Care Set": "Hair Care Set",
     "Protein Treatment": "Protein Treatment",
     "Latest Offers": "Latest Offers",
+    "Handmade Bags": "Handmade Bags",
   },
 };
