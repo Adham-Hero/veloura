@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { uploadImage } from "../services/uploadService";
 
 const emptyForm = {
   name: "",
@@ -29,6 +30,10 @@ const CATEGORIES = [
 const AdminProductForm = ({ product, onCancel, onSubmit, saving }) => {
   const { t } = useLanguage();
   const [form, setForm] = useState(emptyForm);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState("");
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (product) {
@@ -56,8 +61,34 @@ const AdminProductForm = ({ product, onCancel, onSubmit, saving }) => {
     });
   };
 
+  const handleFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadError("");
+    setUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const url = await uploadImage(file, setUploadProgress);
+      setForm((prev) => ({ ...prev, image: url }));
+    } catch (err) {
+      setUploadError(
+        err.response?.data?.message || err.friendlyMessage || "Image upload failed. You can paste a URL instead."
+      );
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!form.image) {
+      setUploadError(t("admin.imageRequired"));
+      return;
+    }
 
     onSubmit({
       ...form,
@@ -195,13 +226,41 @@ const AdminProductForm = ({ product, onCancel, onSubmit, saving }) => {
           </div>
 
           <label>{t("admin.image")}</label>
-          <input
-            name="image"
-            required
-            value={form.image}
-            onChange={handleChange}
-            placeholder="https://..."
-          />
+          <div className="admin-image-upload">
+            {form.image && (
+              <div className="admin-image-upload__preview">
+                <img src={form.image} alt="Product preview" />
+              </div>
+            )}
+
+            <div className="admin-image-upload__controls">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={handleFileSelect}
+                disabled={uploading}
+                id="product-image-file"
+                className="admin-image-upload__file-input"
+              />
+              <label htmlFor="product-image-file" className="btn-v btn-v-outline btn-v-sm">
+                {uploading ? `${t("admin.uploading")} ${uploadProgress}%` : t("admin.uploadImage")}
+              </label>
+            </div>
+
+            {uploadError && <div className="alert-v alert-v-error mt-2 mb-0">{uploadError}</div>}
+
+            <details className="admin-image-upload__manual">
+              <summary>{t("admin.pasteUrlInstead")}</summary>
+              <input
+                name="image"
+                value={form.image}
+                onChange={handleChange}
+                placeholder="https://..."
+                className="mt-2"
+              />
+            </details>
+          </div>
 
           <label>{t("admin.rating")}</label>
           <input

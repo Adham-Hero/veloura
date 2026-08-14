@@ -246,9 +246,33 @@ curl -X POST http://localhost:5000/api/products \
 - The `role` field is **never** trusted from the client — it's always read from the database via the `protect` middleware, and admin-only routes are enforced server-side with the `admin` middleware, not just hidden in the UI.
 - Order totals and stock are recalculated server-side from the database at checkout time, not trusted from the cart payload.
 
-## 9. Notes on Images
+## 9. Product Image Uploads (Cloudinary)
 
-Products currently use plain image URLs (see `image` field). The `Product` schema is deliberately simple so it's a drop-in fit for Cloudinary later: swap the URL you save into `image` for a Cloudinary `secure_url` after uploading, no schema changes needed.
+The Admin Dashboard's Add/Edit Product form lets the admin **upload an actual image file** (not just paste a URL). Files are uploaded to a free Cloudinary account, which hosts them and gives back a permanent URL that's saved in the product's `image` field — same as before, just populated automatically instead of typed in by hand. Pasting a URL manually still works too (there's a "paste a URL instead" toggle in the form), so this is additive, not a breaking change.
+
+### 9.1 Setup
+
+1. Create a free account at **cloudinary.com** (no credit card required for the free tier).
+2. On your **Cloudinary Dashboard** (the page you land on after logging in), you'll see three values right at the top: **Cloud Name**, **API Key**, and **API Secret** (click "Reveal" next to the secret).
+3. In `backend/.env`:
+   ```
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+4. Restart the backend (`npm run dev`). Uploaded images will appear in your Cloudinary Media Library under the `veloura/products` folder.
+
+If these three variables aren't set, the upload button in the admin form will show a clear error message telling the admin to either configure Cloudinary or paste a URL instead — it fails gracefully rather than breaking the form.
+
+### 9.2 How it works
+
+- `POST /api/upload` (admin-only) accepts a single image file (`multipart/form-data`, field name `image`), max 5MB, JPG/PNG/WEBP/GIF only.
+- The file is streamed straight to Cloudinary from memory (never written to disk), so this works fine on serverless platforms like Vercel with a read-only filesystem.
+- Cloudinary returns a permanent `secure_url`, which the frontend automatically fills into the product's image field.
+
+### 9.3 Deploying
+
+Add the same three variables (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`) to your Render or Vercel backend environment variables, then redeploy.
 
 ## 10. Order Notifications (Email + WhatsApp)
 
@@ -328,4 +352,3 @@ Add whichever environment variables you configured (`EMAIL_USER`, `EMAIL_PASS`, 
 ## 11. What's Intentionally Not Included
 
 - Real payment processing (Stripe, etc.) — the checkout flow and `Order` model are structured so a payment step can be added between "place order" and "order confirmed" without restructuring anything.
-- Image file uploads — development uses image URLs, per the brief.

@@ -54,10 +54,11 @@ const ProductSchema = new mongoose.Schema(
       enum: CATEGORIES,
     },
 
-    // Image URL for now; schema is compatible with Cloudinary (secure_url) later
+    // Hosted image URL - either a Cloudinary secure_url from the upload
+    // endpoint, or a manually pasted external URL.
     image: {
       type: String,
-      required: [true, "Product image URL is required"],
+      required: [true, "Product image is required"],
     },
 
     stock: {
