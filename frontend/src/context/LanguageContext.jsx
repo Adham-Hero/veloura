@@ -7,7 +7,10 @@ const translations = { en, ar };
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState(() => localStorage.getItem("veloura_lang") || "en");
+  // Arabic is the default language
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem("veloura_lang") || "ar"
+  );
 
   useEffect(() => {
     localStorage.setItem("veloura_lang", language);
@@ -24,16 +27,26 @@ export const LanguageProvider = ({ children }) => {
   const t = (key) => {
     const parts = key.split(".");
     let value = translations[language];
+
     for (const part of parts) {
       value = value?.[part];
     }
+
     return value ?? key;
   };
 
   const isRTL = language === "ar";
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t, isRTL }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage,
+        toggleLanguage,
+        t,
+        isRTL,
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );
